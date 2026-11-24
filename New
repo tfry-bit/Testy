@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PasarKita – Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f5;--surface:#fff;--text:#12211f;--muted:#5d6f6b;--line:#dbe5e2;--brand:#0f766e;--brand-ink:#fff;--accent:#f5a524;--danger:#c2410c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1716;--surface:#16231f;--text:#e8f1ef;--muted:#93aaa5;--line:#25362f;--brand:#2dd4bf;--brand-ink:#06201c;--accent:#fbbf24;--danger:#fb923c}}
+:root[data-theme="dark"]{--bg:#0d1716;--surface:#16231f;--text:#e8f1ef;--muted:#93aaa5;--line:#25362f;--brand:#2dd4bf;--brand-ink:#06201c;--accent:#fbbf24;--danger:#fb923c}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line);padding:12px 16px}
+.bar{max-width:1100px;margin:auto;display:flex;gap:12px;align-items:center}
+.logo{font-weight:800;font-size:1.3rem;letter-spacing:-.02em;color:var(--brand);white-space:nowrap}
+.search{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--bg);border-radius:999px;padding:9px 16px}
+.search:focus{border-color:var(--brand)}
+.cartbtn{position:relative;border:0;background:var(--brand);color:var(--brand-ink);border-radius:999px;padding:9px 16px;font-weight:600;white-space:nowrap}
+.cartbtn b{background:var(--accent);color:#2a1a00;border-radius:999px;padding:0 7px;margin-left:6px;font-size:.8rem}
+main{max-width:1100px;margin:auto;padding:20px 16px 60px}
+.hero{background:var(--brand);color:var(--brand-ink);border-radius:20px;padding:26px 22px;margin-bottom:20px}
+.hero h1{margin:0 0 6px;font-size:clamp(1.5rem,5vw,2.2rem);line-height:1.15;letter-spacing:-.02em}
+.hero p{margin:0;opacity:.9;max-width:46ch}
+.tools{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;max-width:100%}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+select{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pic{aspect-ratio:1/1;display:grid;place-items:center;font-size:3.6rem}
+.info{padding:12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.name{font-weight:600;font-size:.95rem;line-height:1.3}
+.meta{color:var(--muted);font-size:.78rem}
+.price{font-weight:800;margin-top:auto;padding-top:6px}
+.add{margin-top:8px;border:1.5px solid var(--brand);background:transparent;color:var(--brand);border-radius:10px;padding:7px;font-weight:600}
+.add:hover{background:var(--brand);color:var(--brand-ink)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--surface);z-index:21;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+aside.on{transform:none}
+.ah{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
+.ah h2{margin:0;font-size:1.1rem}
+.x{border:0;background:var(--bg);border-radius:50%;width:34px;height:34px}
+.items{flex:1;overflow:auto;padding:8px 16px}
+.row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.row .th{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;font-size:1.7rem;flex:none}
+.row .t{flex:1;min-width:0;font-size:.9rem}
+.row .t b{display:block}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
+.foot{padding:16px;border-top:1px solid var(--line)}
+.total{display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem;margin-bottom:12px}
+.pay{width:100%;border:0;background:var(--brand);color:var(--brand-ink);border-radius:12px;padding:12px;font-weight:800}
+.pay:disabled{opacity:.4;cursor:not-allowed}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;opacity:0;transition:.25s;z-index:30;font-size:.9rem}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:520px){.logo{font-size:1.1rem}.cartbtn span{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="logo">PasarKita</div>
+    <input id="q" class="search" type="search" placeholder="Cari produk…" aria-label="Cari produk">
+    <button class="cartbtn" id="openCart" aria-label="Buka keranjang">🛒 <span>Keranjang</span><b id="count">0</b></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Belanja langsung dari penjual lokal</h1>
+    <p>Ribuan produk dari UMKM Indonesia. Bayar mudah, kirim ke seluruh nusantara.</p>
+  </section>
+
+  <div class="tools">
+    <div class="chips" id="chips" role="group" aria-label="Kategori"></div>
+    <select id="sort" aria-label="Urutkan">
+      <option value="rec">Rekomendasi</option>
+      <option value="low">Harga terendah</option>
+      <option value="high">Harga tertinggi</option>
+      <option value="rate">Rating tertinggi</option>
+    </select>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside id="cart" aria-label="Keranjang belanja" aria-hidden="true">
+  <div class="ah"><h2>Keranjang</h2><button class="x" id="closeCart" aria-label="Tutup">✕</button></div>
+  <div class="items" id="items"></div>
+  <div class="foot">
+    <div class="total"><span>Total</span><span id="total">Rp0</span></div>
+    <button class="pay" id="pay">Bayar sekarang</button>
+  </div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const PRODUCTS=[
+{id:1,n:"Kopi Gayo Arabika 250 g",c:"Makanan",p:68000,r:4.9,s:"Aceh",e:"☕",bg:"#f3dcc4"},
+{id:2,n:"Batik Tulis Pekalongan",c:"Fashion",p:285000,r:4.8,s:"Pekalongan",e:"👘",bg:"#dfe6f7"},
+{id:3,n:"Tas Rotan Anyaman",c:"Fashion",p:175000,r:4.6,s:"Lombok",e:"👜",bg:"#f7e3b8"},
+{id:4,n:"Keripik Tempe Pedas",c:"Makanan",p:24000,r:4.7,s:"Malang",e:"🍘",bg:"#fbe0d2"},
+{id:5,n:"Headphone Nirkabel",c:"Elektronik",p:349000,r:4.5,s:"Jakarta",e:"🎧",bg:"#dbe9e6"},
+{id:6,n:"Lampu Meja LED",c:"Rumah",p:129000,r:4.4,s:"Bandung",e:"💡",bg:"#fff1b8"},
+{id:7,n:"Sepatu Lari Ringan",c:"Fashion",p:420000,r:4.7,s:"Bandung",e:"👟",bg:"#e4dcf5"},
+{id:8,n:"Vas Keramik Kasongan",c:"Rumah",p:96000,r:4.8,s:"Bantul",e:"🏺",bg:"#f1d9cf"},
+{id:9,n:"Madu Hutan Sumbawa 500 ml",c:"Makanan",p:115000,r:4.9,s:"Sumbawa",e:"🍯",bg:"#fde6a8"},
+{id:10,n:"Powerbank 10.000 mAh",c:"Elektronik",p:189000,r:4.3,s:"Surabaya",e:"🔋",bg:"#d8eadd"},
+{id:11,n:"Sambal Roa Manado",c:"Makanan",p:39000,r:4.8,s:"Manado",e:"🌶️",bg:"#f8d3cc"},
+{id:12,n:"Set Cangkir Kayu Jati",c:"Rumah",p:152000,r:4.6,s:"Jepara",e:"🥣",bg:"#e9dcc8"}
+];
+const rp=n=>"Rp"+n.toLocaleString("id-ID");
+const $=id=>document.getElementById(id);
+let cat="Semua",cart={};
+
+const cats=["Semua",...new Set(PRODUCTS.map(p=>p.c))];
+$("chips").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("");
+$("chips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip");if(!b)return;
+  cat=b.dataset.c;
+  document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  render();
+});
+$("q").addEventListener("input",render);
+$("sort").addEventListener("change",render);
+
+function render(){
+  const q=$("q").value.trim().toLowerCase();
+  let list=PRODUCTS.filter(p=>(cat==="Semua"||p.c===cat)&&(p.n+p.s+p.c).toLowerCase().includes(q));
+  const s=$("sort").value;
+  if(s==="low")list.sort((a,b)=>a.p-b.p);
+  if(s==="high")list.sort((a,b)=>b.p-a.p);
+  if(s==="rate")list.sort((a,b)=>b.r-a.r);
+  $("grid").innerHTML=list.length?list.map(p=>`
+    <article class="card">
+      <div class="pic" style="background:${p.bg}" aria-hidden="true">${p.e}</div>
+      <div class="info">
+        <div class="name">${p.n}</div>
+        <div class="meta">★ ${p.r} · ${p.s}</div>
+        <div class="price">${rp(p.p)}</div>
+        <button class="add" data-id="${p.id}">Tambah ke keranjang</button>
+      </div>
+    </article>`).join(""):`<div class="empty">Produk tidak ditemukan. Coba kata kunci atau kategori lain.</div>`;
+}
+$("grid").addEventListener("click",e=>{
+  const b=e.target.closest(".add");if(!b)return;
+  const id=+b.dataset.id;cart[id]=(cart[id]||0)+1;
+  updateCart();toast("Ditambahkan ke keranjang");
+});
+
+function updateCart(){
+  const ids=Object.keys(cart).map(Number);
+  const n=ids.reduce((a,i)=>a+cart[i],0);
+  const sum=ids.reduce((a,i)=>a+cart[i]*PRODUCTS.find(p=>p.id===i).p,0);
+  $("count").textContent=n;$("total").textContent=rp(sum);$("pay").disabled=!n;
+  $("items").innerHTML=ids.length?ids.map(i=>{const p=PRODUCTS.find(x=>x.id===i);return `
+    <div class="row">
+      <div class="th" style="background:${p.bg}">${p.e}</div>
+      <div class="t"><b>${p.n}</b>${rp(p.p)}</div>
+      <div class="qty"><button data-a="-" data-id="${i}" aria-label="Kurangi">−</button><span>${cart[i]}</span><button data-a="+" data-id="${i}" aria-label="Tambah">+</button></div>
+    </div>`}).join(""):`<p class="empty">Keranjang masih kosong. Pilih produk untuk mulai belanja.</p>`;
+}
+$("items").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-a]");if(!b)return;
+  const id=+b.dataset.id;cart[id]+=b.dataset.a==="+"?1:-1;
+  if(cart[id]<=0)delete cart[id];
+  updateCart();
+});
+
+function openCart(on){
+  $("cart").classList.toggle("on",on);$("scrim").classList.toggle("on",on);
+  $("cart").setAttribute("aria-hidden",!on);
+}
+$("openCart").onclick=()=>openCart(true);
+$("closeCart").onclick=$("scrim").onclick=()=>openCart(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")openCart(false)});
+$("pay").onclick=()=>{cart={};updateCart();openCart(false);toast("Pesanan dibuat. Terima kasih sudah berbelanja!")};
+
+let tm;
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tm);tm=setTimeout(()=>t.classList.remove("on"),1800)}
+
+render();updateCart();
+</script>
+</body>
+</html>
